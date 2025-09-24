@@ -31,14 +31,26 @@ public class ProdutoService {
         return result.map(x -> new ProdutoDTO(x));
     }
 
+    @Transactional
     public ProdutoDTO inserirProduto(ProdutoDTO dto){
         Produto entity = new Produto();
+        copiarDTOparaEntidade(dto,entity);
+        entity = repository.save(entity);
+        return new ProdutoDTO(entity);
+    }
+
+    @Transactional
+    public ProdutoDTO atualizarProduto(Long id, ProdutoDTO dto){
+        Produto entity = repository.getReferenceById(id);
+        copiarDTOparaEntidade(dto, entity);
+        entity = repository.save(entity);
+        return new ProdutoDTO(entity);
+    }
+
+    private void copiarDTOparaEntidade(ProdutoDTO dto, Produto entity) {
         entity.setNome(dto.getNome());
         entity.setDescricao(dto.getDescricao());
         entity.setPreco(dto.getPreco());
         entity.setImgUrl(dto.getImgUrl());
-
-        entity = repository.save(entity);
-        return new ProdutoDTO(entity);
     }
 }
