@@ -1,4 +1,4 @@
-package com.lex.LexCommerce.entities.enums;
+package com.lex.LexCommerce.enums;
 
 public enum PedidoStatus {
 

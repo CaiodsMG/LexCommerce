@@ -1,6 +1,6 @@
 package com.lex.LexCommerce.entities;
 
-import com.lex.LexCommerce.entities.enums.PedidoStatus;
+import com.lex.LexCommerce.enums.PedidoStatus;
 import jakarta.persistence.*;
 
 import java.time.Instant;
