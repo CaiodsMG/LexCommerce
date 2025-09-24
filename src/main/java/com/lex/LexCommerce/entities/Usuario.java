@@ -14,10 +14,16 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String nome;
+
+    @Column(unique = true)
     private String email;
+
     private String telefone;
+
     private LocalDate nascimento;
+
     private String senha;
 
     @OneToMany(mappedBy = "cliente")

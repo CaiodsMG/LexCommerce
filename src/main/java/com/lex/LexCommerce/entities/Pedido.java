@@ -4,6 +4,9 @@ import com.lex.LexCommerce.entities.enums.PedidoStatus;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_pedido")
@@ -23,6 +26,9 @@ public class Pedido {
 
     @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
     private Pagamento pagamento;
+
+    @OneToMany(mappedBy = "id.pedido")
+    private Set<PedidoItem> items = new HashSet<>();
 
     public Pedido() {
     }
@@ -73,5 +79,13 @@ public class Pedido {
 
     public void setPagamento(Pagamento pagamento) {
         this.pagamento = pagamento;
+    }
+
+    public Set<PedidoItem> getItems() {
+        return items;
+    }
+
+    public List<Produto> getProdutos() {
+        return items.stream().map(x -> x.getProduto()).toList();
     }
 }
