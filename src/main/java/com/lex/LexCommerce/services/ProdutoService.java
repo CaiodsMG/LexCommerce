@@ -3,10 +3,14 @@ package com.lex.LexCommerce.services;
 import com.lex.LexCommerce.dto.ProdutoDTO;
 import com.lex.LexCommerce.entities.Produto;
 import com.lex.LexCommerce.repositories.ProdutoRepository;
+import com.lex.LexCommerce.services.exceptions.DatabaseException;
+import com.lex.LexCommerce.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -19,8 +23,8 @@ public class ProdutoService {
 
     @Transactional(readOnly = true)
     public ProdutoDTO findById(Long id){
-        Optional<Produto> result = repository.findById(id);
-        Produto produto = result.get();
+        Produto produto = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Recurso não encontrado"));
         ProdutoDTO dto = new ProdutoDTO(produto);
         return dto;
     }
@@ -47,9 +51,17 @@ public class ProdutoService {
         return new ProdutoDTO(entity);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.SUPPORTS)
     public void deletarProduto(Long id){
-        repository.deleteById(id);
+        if (!repository.existsById(id)){
+            throw new ResourceNotFoundException("Recurso não encontrado.");
+        }
+        try{
+            repository.deleteById(id);
+        }catch (DataIntegrityViolationException e){
+            throw new DatabaseException("Falha de Integridade Referencial");
+        }
+
     }
 
     private void copiarDTOparaEntidade(ProdutoDTO dto, Produto entity) {
