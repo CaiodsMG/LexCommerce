@@ -2,14 +2,24 @@ package com.lex.LexCommerce.dto;
 
 import com.lex.LexCommerce.entities.Produto;
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.*;
 
 public class ProdutoDTO {
 
     private Long id;
+
+    @NotBlank(message = "Campo requerido.")
+    @Size(min = 3, max = 80, message = "Nome precisa ter entre 3 e 80 caracteres.")
     private String nome;
+    @Size(min = 10, message = "Descrição precisa ter no minimo 10 caracteres.")
+    @NotBlank
     private String descricao;
+
+    @Positive(message = "Preço deve ser positivo.")
     private Double preco;
     private String imgUrl;
+
+    public ProdutoDTO(){}
 
     public ProdutoDTO(Long id, String nome, String descricao, Double preco, String imgUrl) {
         this.id = id;

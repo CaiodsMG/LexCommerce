@@ -2,6 +2,7 @@ package com.lex.LexCommerce.controllers;
 
 import com.lex.LexCommerce.dto.ProdutoDTO;
 import com.lex.LexCommerce.services.ProdutoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,12 +34,12 @@ public class ProdutoController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public ProdutoDTO inserirProduto(@RequestBody ProdutoDTO produto){
+    public ProdutoDTO inserirProduto(@Valid @RequestBody ProdutoDTO produto){
         return service.inserirProduto(produto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProdutoDTO> atualizarProduto(@PathVariable Long id, @RequestBody ProdutoDTO dto){
+    public ResponseEntity<ProdutoDTO> atualizarProduto(@PathVariable Long id, @Valid @RequestBody ProdutoDTO dto){
         dto = service.atualizarProduto(id, dto);
         return ResponseEntity.ok(dto);
     }
